@@ -3,9 +3,9 @@ import pandas as pd
 from course_db_helper import get_all_the_courses
 from student_db_helper import insert_students_in_bulk
 
-st.title("Upload students")
+st.title("Upload computers list.")
 
-def extract_students_from_excel(excel_file, course_id):
+def extract_computers_from_excel(excel_file, course_id):
     """Extracts student information from the provided Excel file."""
     try:
         df = pd.read_excel(excel_file)
