@@ -1,52 +1,36 @@
 import streamlit as st
 import pandas as pd
-from course_db_helper import get_all_the_courses
-from student_db_helper import insert_students_in_bulk
+from computer_db_helper import insert_computer_in_bulk
 
 st.title("Upload computers list.")
 
-def extract_computers_from_excel(excel_file, course_id):
-    """Extracts student information from the provided Excel file."""
+def extract_computers_from_excel(excel_file1, excel_file2):
+    """Extracts computer information from the provided Excel file."""
     try:
-        df = pd.read_excel(excel_file)
+        df1 = pd.read_excel(excel_file1)
+        df2 = pd.read_excel(excel_file2)
     except Exception as e:
         st.write(f"Error reading the Excel file: {e}")
         return []
 
-    df = df.rename(columns={
-        'Código': 'code',
-        'Nombre': 'first_name',
-        'Apellidos': 'last_name',
-        'Email': 'email',
-        'Email Institucional': 'institutional_email'
-    })
+    df1 = df1[['serial', 'marca', 'modelo']]
+    df2 = df2[['procesador', 'memoria_ram', 'almacenamiento', 'tipo']]
 
-    df['code'] = df['code'].astype(str)
-    df['fullName'] = df['first_name'] + ' ' + df['last_name']
-    df['emails'] = df['email'] + ',' + df['institutional_email']
+    # Concatenar ambos DataFrames y eliminar duplicados por la primera columna ('serial')
+    #merged_df = pd.merge(df1, df2)
+    merged_df = pd.concat([df1, df2], axis=1)
 
-    df = df[['code', 'fullName', 'emails']]
-
-    insert_students_in_bulk(df, course_id, table_name='students')
+    insert_computer_in_bulk(merged_df, table_name='computer')
     
-    st.write(df)
-
-# Obtener los cursos
-courses = get_all_the_courses()
-
-# Crear un diccionario para mapear IDs de cursos a sus nombres
-course_dict = {course['id']: course['name'] for course in courses}
-course_ids = list(course_dict.keys())
-
-# Crear el dropdown con los IDs como valor de selección y los nombres como valor de visualización
-selected_course_id = st.selectbox("Select a course", course_ids, format_func=lambda id: course_dict[id])
+    st.write(merged_df)
 
 # Subir el archivo de Excel
-uploaded_file = st.file_uploader("Attendance list Excel file", type=["xls", "xlsx"])
+uploaded_file1 = st.file_uploader("Upload first Excel file", type=["xls", "xlsx"])
+uploaded_file2 = st.file_uploader("Upload second Excel file", type=["xls", "xlsx"])
 
 # Botón para procesar la carga y mostrar los valores
-if st.button("Save students"):
-    if uploaded_file is not None:
-        extract_students_from_excel(uploaded_file, selected_course_id)
-        st.write("Students have been created successfully")
+if st.button("Save computers"):
+    if uploaded_file1 is not None and uploaded_file2 is not None:
+        extract_computers_from_excel(uploaded_file1, uploaded_file2)
+        st.write("computers have been created successfully")
     
