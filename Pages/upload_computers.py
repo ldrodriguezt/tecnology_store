@@ -32,7 +32,6 @@ def form_manual():
     
     st.subheader("Agregar información de equipo de cómputo")
 
-    # Crear campos de entrada en el formulario
     serial = st.text_input("Serial")
     marca = st.text_input("Marca")
     modelo = st.text_input("Modelo")
@@ -44,7 +43,6 @@ def form_manual():
     
     if st.button("Agregar datos"):
         if serial and marca and modelo and procesador and memoria_ram and almacenamiento and tipo:
-            # Llamar la función para insertar en la base de datos
             insert_computer_manually(serial, marca, modelo, procesador, memoria_ram, almacenamiento, tipo)
             st.success("¡La información se ha registrado exitosamente!")
         else:
