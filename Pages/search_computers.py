@@ -19,7 +19,7 @@ if brands:
             results = get_computer_info(marca=marca_seleccionada)
 
             if results:
-                st.write(f"Found {len(results)} computer(s) with the brand '{marca_seleccionada}':")
+                st.write(f"Se encontraron {len(results)} computadores de la marca '{marca_seleccionada}':")
                 # Mostrar los resultados en una tabla
                 df = pd.DataFrame(results, columns=['Serial', 'Marca', 'Modelo', 'Procesador', 'Memoria RAM', 'Almacenamiento', 'Tipo'])
                 st.dataframe(df)
